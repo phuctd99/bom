@@ -13,17 +13,14 @@ public class FlameItem extends Item {
 	}
 
 	@Override
-	protected void handleItemActive() {
-		Game.addBombRadius(1);
-	}
-
-	@Override
-	protected void handleItemInactive() {
-		Game.addBombRadius(-1);
-	}
-
-	@Override
-	public String getDisplayActiveItem() {
-		return "Flame:";
+	public boolean collide(Entity e) {
+		// TODO: xử lý Bomber ăn 
+            if (e instanceof Bomber) {
+                
+                Sound.play("Item");
+                Game.addBombRadius(1);
+                remove();
+        }
+        return false;
 	}
 }
