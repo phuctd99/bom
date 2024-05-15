@@ -24,13 +24,6 @@ public class Screen {
 		_pixels = new int[width * height];
 		
 	}
-	
-	public void clear() {
-		for (int i = 0; i < _pixels.length; i++) {
-			_pixels[i] = 0;
-		}
-	}
-	
 	public void renderEntity(int xp, int yp, Entity entity) { //save entity pixels
 		xp -= xOffset;
 		yp -= yOffset;
@@ -63,7 +56,11 @@ public class Screen {
 			}
 		}
 	}
-	
+	public void clear() {
+		for (int i = 0; i < _pixels.length; i++) {
+			_pixels[i] = 0;
+		}
+	}
 	public static void setOffset(int xO, int yO) {
 		xOffset = xO;
 		yOffset = yO;

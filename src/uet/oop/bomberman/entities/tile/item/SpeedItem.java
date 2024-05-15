@@ -13,14 +13,17 @@ public class SpeedItem extends Item {
 	}
 
 	@Override
-	public boolean collide(Entity e) {
-		// TODO: xử lý Bomber ăn Item
-            if (e instanceof Bomber) {
-                
-                Sound.play("Item");
-                Game.addBomberSpeed(0.5);
-                remove();
-            }
-        return false;
+	protected void handleItemActive() {
+		Game.addBomberSpeed(0.5);
+	}
+
+	@Override
+	protected void handleItemInactive() {
+		Game.addBomberSpeed(-0.5);
+	}
+
+	@Override
+	public String getDisplayActiveItem() {
+		return "Speed:";
 	}
 }

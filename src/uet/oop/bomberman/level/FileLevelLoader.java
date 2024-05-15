@@ -1,6 +1,7 @@
 package uet.oop.bomberman.level;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class FileLevelLoader extends LevelLoader {
         // TODO: cập nhật các giá trị đọc được vào _width, _height, _level, _map
         List<String> list = new ArrayList<>();
         try {
-            FileReader fr = new FileReader("res\\levels\\Level" + level + ".txt");//doc tep luu map
+            FileReader fr = new FileReader("res/levels/Level" + level + ".txt");//doc tep luu map
             BufferedReader br = new BufferedReader(fr);
             String line = br.readLine();
             while (!line.equals("")) {
