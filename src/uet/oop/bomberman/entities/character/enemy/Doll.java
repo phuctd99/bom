@@ -6,6 +6,7 @@
 package uet.oop.bomberman.entities.character.enemy;
 
 import uet.oop.bomberman.Board;
+import uet.oop.bomberman.Game;
 import uet.oop.bomberman.entities.character.enemy.ai.AILow;
 import uet.oop.bomberman.entities.character.enemy.ai.AIMedium;
 import uet.oop.bomberman.graphics.Sprite;
@@ -21,7 +22,7 @@ public class Doll extends Enemy{
 
         _sprite = Sprite.balloom_left1;
 
-        _ai = new AIMedium(_board.getBomber(), this);
+        _ai = new AIMedium(entityManager.getPlayer(), this);
         _direction = _ai.calculateDirection();
 
     }
@@ -32,7 +33,7 @@ public class Doll extends Enemy{
             case 0:
             case 1:
                 if (_moving) {
-                    _sprite = Sprite.movingSprite(Sprite.doll_right1, Sprite.doll_right2, Sprite.doll_right3, _animate, 60);
+                    _sprite = Sprite.movingSprite(Sprite.doll_right1, Sprite.doll_right2, Sprite.doll_right3, _animate, Game.TICKS_PER_SECOND);
                 } else {
                     _sprite = Sprite.doll_left1;
                 }
@@ -40,7 +41,7 @@ public class Doll extends Enemy{
             case 2:
             case 3:
                 if (_moving) {
-                    _sprite = Sprite.movingSprite(Sprite.doll_left1, Sprite.doll_left2, Sprite.doll_left3, _animate, 60);
+                    _sprite = Sprite.movingSprite(Sprite.doll_left1, Sprite.doll_left2, Sprite.doll_left3, _animate, Game.TICKS_PER_SECOND);
                 } else {
                     _sprite = Sprite.doll_left1;
                 }

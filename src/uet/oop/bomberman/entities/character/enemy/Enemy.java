@@ -1,19 +1,13 @@
 package uet.oop.bomberman.entities.character.enemy;
 
-import uet.oop.bomberman.Board;
 import uet.oop.bomberman.Game;
+import uet.oop.bomberman.base.IEntityManager;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.Message;
-import uet.oop.bomberman.entities.bomb.Flame;
-import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.character.Character;
 import uet.oop.bomberman.entities.character.enemy.ai.AI;
 import uet.oop.bomberman.graphics.Screen;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.level.Coordinates;
-
-import java.awt.*;
-import uet.oop.bomberman.sound.Sound;
 
 public abstract class Enemy extends Character {
 
@@ -28,10 +22,10 @@ public abstract class Enemy extends Character {
 	
 	protected int _finalAnimation = 30;
 	protected Sprite _deadSprite;
-	
-	public Enemy(int x, int y, Board board, Sprite dead, double speed, int points) {
-		super(x, y, board);
-		
+
+	public Enemy(int x, int y, IEntityManager entityManager, Sprite dead, double speed, int points) {
+		super(x, y, speed, entityManager);
+
 		_points = points;
 		_speed = speed;
 		
@@ -39,21 +33,14 @@ public abstract class Enemy extends Character {
 		rest = (MAX_STEPS - (int) MAX_STEPS) / MAX_STEPS;
 		_steps = MAX_STEPS;
 		
-		_timeAfter = 20;
+		timerDeathAnimation = 20;
 		_deadSprite = dead;
 	}
 	
 	@Override
-	public void update() {
+	public void handleUpdate() {
 		animate();
-		
-		if(!_alive) {
-			afterKill();
-			return;
-		}
-		
-		if(_alive)
-			calculateMove();
+		calculateMove();
 	}
 	
 	@Override
@@ -62,11 +49,11 @@ public abstract class Enemy extends Character {
 		if(_alive)
 			chooseSprite();
 		else {
-			if(_timeAfter > 0) {
+			if(timerDeathAnimation > 0) {
 				_sprite = _deadSprite;
 				_animate = 0;
 			} else {
-				_sprite = Sprite.movingSprite(Sprite.mob_dead1, Sprite.mob_dead2, Sprite.mob_dead3, _animate, 60);
+				_sprite = Sprite.movingSprite(Sprite.mob_dead1, Sprite.mob_dead2, Sprite.mob_dead3, _animate, Game.TICKS_PER_SECOND);
 			}
 				
 		}
@@ -102,13 +89,6 @@ public abstract class Enemy extends Character {
 	}
 	
 	@Override
-	public void move(double xa, double ya) {
-		if(!_alive) return;
-		_y += ya;
-		_x += xa;
-	}
-	
-	@Override
 	public boolean canMove(double x, double y) {
 		double xr = _x, yr = _y - 16; //subtract y to get more accurate results
 		
@@ -122,46 +102,26 @@ public abstract class Enemy extends Character {
 		int xx = Coordinates.pixelToTile(xr) +(int)x;
 		int yy = Coordinates.pixelToTile(yr) +(int)y;
 		
-		Entity a = _board.getEntity(xx, yy, this); //entity of the position we want to go
+		Entity a = entityManager.getEntity(xx, yy, this); //entity of the position we want to go
 		
-		return a.collide(this);
+		return a.canBePassedThroughBy(this);
 	}
 
 	@Override
 	public boolean collide(Entity e) {
-		if(e instanceof Flame){
-                    this.kill();
-                    return false;
-                }
-                if(e instanceof Bomber){
-                    ((Bomber) e).kill();
-                    return false;
-                }
+		if (!super.collide(e)) return false;
 		return true;
 	}
 	
 	@Override
-	public void kill() {
-		if(!_alive) return;
-		_alive = false;
-		
-		_board.addPoints(_points);
-
-		Message msg = new Message("+" + _points, getXMessage(), getYMessage(), 2, Color.white, 14);
-		_board.addMessage(msg);
-                Sound.play("AA126_11");
-	}
-	
-	
-	@Override
-	protected void afterKill() {
-		if(_timeAfter > 0) --_timeAfter;
-		else {
-			if(_finalAnimation > 0) --_finalAnimation;
-			else
-				remove();
-		}
+	protected void handleAfterDeath() {
+		remove();
 	}
 	
 	protected abstract void chooseSprite();
+
+	@Override
+	public int getPoints() {
+		return _points;
+	}
 }

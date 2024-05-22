@@ -40,13 +40,27 @@ public abstract class Entity implements IRender {
 		return _sprite;
 	}
 
+	public double getCenterX() {
+		return _x + _sprite.SIZE / 2;
+	}
+
+	public double getCenterY() {
+		return _y - _sprite.SIZE / 2;
+	}
+
 	/**
 	 * Phương thức này được gọi để xử lý khi hai entity va chạm vào nhau
 	 * @param e
 	 * @return
 	 */
 	public abstract boolean collide(Entity e);
-        //xu li 2 entity va cham
+
+	/**
+	 * Check if other Entity can pass through this
+	 * @param other
+	 * @return
+	 */
+	public abstract boolean canBePassedThroughBy(Entity other);
 	
 	public double getX() {
 		return _x;

@@ -27,14 +27,14 @@ public class Oneal extends Enemy {
 			case 0:
 			case 1:
 				if(_moving)
-					_sprite = Sprite.movingSprite(Sprite.oneal_right1, Sprite.oneal_right2, Sprite.oneal_right3, _animate, 60);
+					_sprite = Sprite.movingSprite(Sprite.oneal_right1, Sprite.oneal_right2, Sprite.oneal_right3, _animate, Game.TICKS_PER_SECOND);
 				else
 					_sprite = Sprite.oneal_left1;
 				break;
 			case 2:
 			case 3:
 				if(_moving)
-					_sprite = Sprite.movingSprite(Sprite.oneal_left1, Sprite.oneal_left2, Sprite.oneal_left3, _animate, 60);
+					_sprite = Sprite.movingSprite(Sprite.oneal_left1, Sprite.oneal_left2, Sprite.oneal_left3, _animate, Game.TICKS_PER_SECOND);
 				else
 					_sprite = Sprite.oneal_left1;
 				break;
