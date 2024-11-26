@@ -1,5 +1,6 @@
 package uet.oop.bomberman.entities;
 
+import uet.oop.bomberman.Game;
 import uet.oop.bomberman.graphics.Screen;
 
 import java.awt.*;
@@ -27,7 +28,7 @@ public class Message extends Entity {
 		_x =x;
 		_y = y;
 		_message = message;
-		_duration = duration * 60; //seconds
+		_duration = duration * Game.TICKS_PER_SECOND; //seconds
 		_color = color;
 		_size = size;
 	}
@@ -62,6 +63,11 @@ public class Message extends Entity {
 
 	@Override
 	public boolean collide(Entity e) {
+		return true;
+	}
+
+	@Override
+	public boolean canBePassedThroughBy(Entity other) {
 		return true;
 	}
 	

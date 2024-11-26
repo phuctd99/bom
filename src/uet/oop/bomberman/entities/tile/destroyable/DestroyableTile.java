@@ -42,6 +42,11 @@ public class DestroyableTile extends Tile {
 		return false;
 	}
 	
+	@Override
+	public boolean canBePassedThroughBy(Entity other) {
+		return false;
+	}
+
 	public void addBelowSprite(Sprite sprite) {
 		_belowSprite = sprite;
 	}
@@ -58,6 +63,11 @@ public class DestroyableTile extends Tile {
 		}
 			
 		return x2;
+	}
+
+	@Override
+	public boolean isDestroyable() {
+		return true;
 	}
 	
 }
