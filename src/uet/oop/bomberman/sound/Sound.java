@@ -18,13 +18,14 @@ public class Sound {
                     clip.open(inputStream);
                     clip.start();
                 } catch (Exception e) {
-                    System.err.println(e.getMessage());
+                    System.err.println("Failed playing sound '" + sound + "': " + e.getMessage());
                 }
             }
         }).start();
-        
+
     }
-    public static void stop(String sound){
+
+    public static void stop(String sound) {
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -34,7 +35,7 @@ public class Sound {
                     clip.open(inputStream);
                     clip.stop();
                 } catch (Exception e) {
-                    System.err.println(e.getMessage());
+                    System.err.println("Failed stopping sound '" + sound + "': " + e.getMessage());
                 }
             }
         }).start();

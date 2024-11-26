@@ -4,6 +4,8 @@ import uet.oop.bomberman.Game;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Swing Frame chứa toàn bộ các component
@@ -17,8 +19,18 @@ public class Frame extends JFrame {
 	private Game _game;
 
 	public Frame() {
-		
-		_containerpane = new JPanel(new BorderLayout());
+
+        try {
+            Font f = Font.createFont(Font.TRUETYPE_FONT, new File("res/font/Minecraft.ttf"));
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			ge.registerFont(f);
+        } catch (FontFormatException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        _containerpane = new JPanel(new BorderLayout());
 		_gamepane = new GamePanel(this);
 		_infopanel = new InfoPanel(_gamepane.getGame());
 		
@@ -44,6 +56,10 @@ public class Frame extends JFrame {
 	
 	public void setPoints(int points) {
 		_infopanel.setPoints(points);
+	}
+
+	public void renderItemTime() {
+		_infopanel.renderItemTime();
 	}
 	
 }
