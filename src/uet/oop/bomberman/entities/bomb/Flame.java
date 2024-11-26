@@ -1,14 +1,14 @@
 package uet.oop.bomberman.entities.bomb;
 
-import uet.oop.bomberman.Board;
+import uet.oop.bomberman.base.IEntityManager;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.character.Bomber;
-import uet.oop.bomberman.entities.character.enemy.Enemy;
+import uet.oop.bomberman.entities.character.Character;
+import uet.oop.bomberman.entities.tile.Tile;
 import uet.oop.bomberman.graphics.Screen;
 
 public class Flame extends Entity {
 
-	protected Board _board;
+	protected IEntityManager entityManager;
 	protected int _direction;
 	private int _radius;
 	protected int xOrigin, yOrigin;
@@ -21,14 +21,14 @@ public class Flame extends Entity {
 	 * @param direction là hướng của Flame
 	 * @param radius độ dài cực đại của Flame
 	 */
-	public Flame(int x, int y, int direction, int radius, Board board) {
+	public Flame(int x, int y, int direction, int radius, IEntityManager entityManager) {
 		xOrigin = x;
 		yOrigin = y;
 		_x = x;
 		_y = y;
 		_direction = direction;
 		_radius = radius;
-		_board = board;
+		this.entityManager = entityManager;
 		createFlameSegments();
 	}
 
@@ -60,6 +60,10 @@ public class Flame extends Entity {
 				case 3: x--; break;
 			}
 			_flameSegments[i] = new FlameSegment(x, y, _direction, last);
+			Entity entity = entityManager.getEntityAt(x, y);
+			if (entity!=null) {
+				entity.collide(this);
+			}
 		}
 	}
 
@@ -78,16 +82,31 @@ public class Flame extends Entity {
 			if(_direction == 2) y++;
 			if(_direction == 3) x--;
 			
-			Entity a = _board.getEntity(x, y, null);
+			Entity a = entityManager.getEntityAt(x, y);
 			
 			if(a instanceof Bomb) ++radius; //explosion has to be below the bom
 			
-			if(a.collide(this) == false) //cannot pass thru
+			if(!canSpawnFlameOn(a)) {
 				break;
+			}
 			
 			++radius;
+
+			// Stop if encounter brick
+			if (!a.canBePassedThroughBy(this)) {
+				break;
+			}
 		}
 		return radius;
+	}
+
+	private boolean canSpawnFlameOn(Entity entity) {
+		if (entity.canBePassedThroughBy(this)) return true;
+		if (entity instanceof Tile) {
+			Tile tile = (Tile) entity;
+			if (tile.isDestroyable()) return true;
+		}
+		return false;
 	}
 	
 	public FlameSegment flameSegmentAt(int x, int y) {
@@ -110,9 +129,15 @@ public class Flame extends Entity {
 
 	@Override
 	public boolean collide(Entity e) {
-		// TODO: xử lý va chạm với Bomber, Enemy. Chú ý đối tượng này có vị trí chính là vị trí của Bomb đã nổ
-		if(e instanceof Bomber) ((Bomber) e).kill();
-                if(e instanceof Enemy) ((Enemy) e).kill();
-                return true;
+		if (e instanceof Character) {
+			((Character)e).handleOnDeath();
+		}
+		return true;
 	}
+
+	@Override
+	public boolean canBePassedThroughBy(Entity other) {
+		return true;
+	}
+	
 }

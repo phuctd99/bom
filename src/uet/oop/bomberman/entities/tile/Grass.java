@@ -4,7 +4,7 @@ package uet.oop.bomberman.entities.tile;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 
-public class Grass extends Tile {
+public class Grass extends NonDestroyableTile {
 
 	public Grass(int x, int y, Sprite sprite) {
 		super(x, y, sprite);
@@ -17,6 +17,11 @@ public class Grass extends Tile {
 	 */
 	@Override
 	public boolean collide(Entity e) {
+		return true;
+	}
+
+	@Override
+	public boolean canBePassedThroughBy(Entity other) {
 		return true;
 	}
 }

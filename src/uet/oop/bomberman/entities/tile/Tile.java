@@ -26,6 +26,12 @@ public abstract class Tile extends Entity {
 		return false;//khong cho di qua
 	}
 	
+	
+	@Override
+	public boolean canBePassedThroughBy(Entity other) {
+		return false;
+	}
+
 	@Override
 	public void render(Screen screen) {
 		screen.renderEntity( Coordinates.tileToPixel(_x), Coordinates.tileToPixel(_y), this);
@@ -33,4 +39,6 @@ public abstract class Tile extends Entity {
 	
 	@Override
 	public void update() {}
+
+	public abstract boolean isDestroyable();
 }

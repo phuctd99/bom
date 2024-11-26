@@ -1,6 +1,8 @@
 package uet.oop.bomberman.entities;
 
+import uet.oop.bomberman.entities.tile.Tile;
 import uet.oop.bomberman.entities.tile.destroyable.DestroyableTile;
+import uet.oop.bomberman.entities.tile.item.Item;
 import uet.oop.bomberman.graphics.Screen;
 
 import java.util.LinkedList;
@@ -9,11 +11,12 @@ import java.util.LinkedList;
  * Chứa và quản lý nhiều Entity tại cùng một vị trí
  * Ví dụ: tại vị trí dấu Item, có 3 Entity [Grass, Item, Brick]
  */
-public class LayeredEntity extends Entity {
+public class LayeredEntity extends Tile {
 	
-	protected LinkedList<Entity> _entities = new LinkedList<>();
+	protected LinkedList<Tile> _entities = new LinkedList<>();
 	
-	public LayeredEntity(int x, int y, Entity ... entities) {
+	public LayeredEntity(int x, int y, Tile ... entities) {
+		super(x, y, null);
 		_x = x;
 		_y = y;
 		
@@ -38,7 +41,7 @@ public class LayeredEntity extends Entity {
 		getTopEntity().render(screen);
 	}
 	
-	public Entity getTopEntity() {
+	public Tile getTopEntity() {
 		
 		return _entities.getLast();
 	}
@@ -51,15 +54,31 @@ public class LayeredEntity extends Entity {
 		}
 	}
 	
-	public void addBeforeTop(Entity e) {
+	public void addBeforeTop(Tile e) {
 		_entities.add(_entities.size() - 1, e);
+	}
+
+	public boolean hasItem() {
+		for (Tile e : _entities) {
+			if(e instanceof Item) return true;
+		}
+		return false;
 	}
 	
 	@Override
 	public boolean collide(Entity e) {
 		// TODO: lấy entity trên cùng ra để xử lý va chạm
-                
 		return getTopEntity().collide(e);
+	}
+
+	@Override
+	public boolean canBePassedThroughBy(Entity other) {
+		return getTopEntity().canBePassedThroughBy(other);
+	}
+
+	@Override
+	public boolean isDestroyable() {
+		return getTopEntity().isDestroyable();
 	}
 
 }
